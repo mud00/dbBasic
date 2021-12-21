@@ -1,0 +1,108 @@
+Create the "Activité" Table
+
+create table Activite(
+nomStation Varchar(50),
+Libellé Varchar(50) Primary key,
+Prix Int
+);
+
+Create the "Client" Table
+
+create table Client(
+ID int Primary Key,
+Nom Varchar(50),
+Prénom Varchar(50),
+Ville Varchar(50),
+Région Varchar(50),
+Solde Int
+);
+
+Create the "Sejour" Table
+
+
+create table Sejour(
+idClient int,
+Station Varchar(50),
+Début Date Primary key,
+nbPlaces int
+);
+
+Create the "Station" Table
+
+create table Station(
+nomStation Varchar(50) Primary key,
+Capacité Varchar(50),
+Lieu Varchar(50),
+Région Varchar(50),
+Tarif Int
+);
+
+
+Table Joining:
+
+
+ALTER TABLE Activite
+ADD CONSTRAINT a
+FOREIGN KEY (nomStation) REFERENCES Station(nomStation);
+
+ALTER TABLE Sejour
+ADD CONSTRAINT b 
+FOREIGN KEY(idClient) REFERENCES Client(ID);
+
+ALTER TABLE Sejour
+ADD CONSTRAINT c
+FOREIGN KEY(Station) REFERENCES Station(nomStation);
+
+
+Miscellaneous INSERT functions
+
+
+INSERT INTO Activite ( NomStation, Libellé, Prix )
+VALUES ("Venusa", "Plongée", 120);
+
+INSERT INTO Activite ( NomStation, Libellé, Prix )
+VALUES ("Venusa", "Voile", 150);
+
+INSERT INTO Client ( Id, Nom, Prénom, Ville, Région, Solde )
+VALUES (12, "Fogg", "Phileas", "Londres", "Europe", 12465);
+
+INSERT INTO Client ( Id, Nom, Prénom, Ville, Région, Solde )
+VALUES (30, "Kerouac", "Jack", "New York", "Amérique", 9812);
+
+INSERT INTO Client ( Id, Nom, Prénom, Ville, Région, Solde )
+VALUES (20, "Pascal", "Blaise", "Paris", "Europe", 6763);
+
+INSERT INTO Sejour ( idClient, Station, Début, nbPlaces )
+VALUES (20, "Venusa", #03/08/2013#, 4);
+
+INSERT INTO Station ( NomStation, Capacité, Lieu, Région, Tarif )
+VALUES ("Venusa", 350, "Guadeloupe", "Antilles", 1200);
+
+
+View Creation:
+
+
+CREATE VIEW ActivitéAntilles AS
+SELECT a.LIbellé, s.nomStation 
+FROM Activite a , StationAntilles s
+Where Région = "Antilles" ;
+
+CREATE VIEW BonsClient(NomBC, PrénomBC, VilleBC) AS
+SELECT Nom, Prénom, Ville
+FROM Client
+WHERE Solde >=9000;
+
+CREATE VIEW SejourAntilles(nomClient, prénomClient, Ville, Station, Début) AS
+SELECT c.Nom,  c.Prénom, c.Ville, a.nomStation, s.Début
+FROM Client c, Sejour s, Station a
+Where a.Région = "Antilles";
+
+CREATE VIEW StationAntilles AS
+SELECT nomStation, Région
+FROM Station
+WHERE Région = "Antilles";
+
+CREATE VIEW VuePerso(ENom, EPrénom, Région, Station) AS
+SELECT c.Nom, c.Prénom, c.Région, s.NomStation
+FROM Client c, Station s
+WHERE c.Région = "Europe" AND s.NomStation = "Venusa";
